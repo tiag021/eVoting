@@ -7,7 +7,7 @@ package eVoting.test;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import eVoting.core.TemplarCoin;
+import eVoting.core.eVoting;
 import eVoting.core.Transaction;
 
 /**
@@ -19,7 +19,7 @@ public class TestTemplarCoin {
         try {
             //TemplarCoin coin  = new TemplarCoin();
             
-            TemplarCoin coin  = TemplarCoin.load("tc.obj");
+            eVoting coin  = eVoting.load("tc.obj");
           
             System.out.println("System : " + coin.getAmount("System"));
             System.out.println("Master : " + coin.getAmount("Master"));

@@ -28,11 +28,11 @@ import java.util.List;
  *
  * @author manso
  */
-public class TemplarCoin implements Serializable {
+public class eVoting implements Serializable {
 
     private ArrayList<Transaction> ledger;
 
-    public TemplarCoin() {
+    public eVoting() {
         ledger = new ArrayList<>();
         ledger.add(new Transaction("System", "Master", 1000));
     }
@@ -57,10 +57,10 @@ public class TemplarCoin implements Serializable {
         }
     }
 
-    public static TemplarCoin load(String fileName) throws IOException, ClassNotFoundException {
+    public static eVoting load(String fileName) throws IOException, ClassNotFoundException {
         try ( ObjectInputStream in = new ObjectInputStream(
                 new FileInputStream(fileName))) {
-            return (TemplarCoin) in.readObject();
+            return (eVoting) in.readObject();
         }
     }
 

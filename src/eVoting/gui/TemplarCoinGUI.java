@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import eVoting.core.TemplarCoin;
+import eVoting.core.eVoting;
 import eVoting.core.Transaction;
 
 /**
@@ -17,16 +17,16 @@ import eVoting.core.Transaction;
  */
 public class TemplarCoinGUI extends javax.swing.JFrame {
     public static String fileTemplarCpoin = "templarCoin.obj";
-    TemplarCoin coin;
+    eVoting coin;
     
     /**
      * Creates new form TemplarCoinGUI
      */
     public TemplarCoinGUI() {
         initComponents();
-        coin = new  TemplarCoin();
+        coin = new  eVoting();
         try {
-            coin = TemplarCoin.load(fileTemplarCpoin);
+            coin = eVoting.load(fileTemplarCpoin);
         } catch (Exception e) {
         }
         txtLeger.setText(coin.toString());
