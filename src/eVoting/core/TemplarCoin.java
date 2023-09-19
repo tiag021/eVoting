@@ -13,7 +13,7 @@
 //::                                                               (c)2020   ::
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //////////////////////////////////////////////////////////////////////////////
-package templarCoin.core;
+package eVoting.core;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -41,10 +41,11 @@ public class TemplarCoin implements Serializable {
         return ledger;
     }
 
+    @Override
     public String toString() {
         StringBuilder txt = new StringBuilder();
         for (Transaction transaction : ledger) {
-            txt.append(transaction.toString() + "\n");
+            txt.append(transaction.toString()).append("\n");
         }
         return txt.toString();
     }
