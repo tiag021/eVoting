@@ -63,8 +63,8 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
         tpTransaction = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         pnTransaction = new javax.swing.JPanel();
-        txtFrom = new javax.swing.JTextField();
-        txtTo = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        jComboBox2 = new javax.swing.JComboBox<>();
         txtValue = new javax.swing.JTextField();
         btRegister = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -99,28 +99,31 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel1.setLayout(new java.awt.BorderLayout());
 
+        pnTransaction.setPreferredSize(new java.awt.Dimension(109, 180));
         pnTransaction.setLayout(new java.awt.GridLayout(4, 1, 5, 5));
 
-        txtFrom.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        txtFrom.setBorder(javax.swing.BorderFactory.createTitledBorder("From"));
-        pnTransaction.add(txtFrom);
+        jComboBox1.setEditable(true);
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox1.setBorder(javax.swing.BorderFactory.createTitledBorder("Eleitor"));
+        pnTransaction.add(jComboBox1);
 
-        txtTo.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        txtTo.setBorder(javax.swing.BorderFactory.createTitledBorder("to"));
-        txtTo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtToActionPerformed(evt);
-            }
-        });
-        pnTransaction.add(txtTo);
+        jComboBox2.setEditable(true);
+        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        jComboBox2.setBorder(javax.swing.BorderFactory.createTitledBorder("Candidato"));
+        pnTransaction.add(jComboBox2);
 
         txtValue.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
         txtValue.setText("0.0");
         txtValue.setBorder(javax.swing.BorderFactory.createTitledBorder("Value"));
+        txtValue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtValueActionPerformed(evt);
+            }
+        });
         pnTransaction.add(txtValue);
 
         btRegister.setIcon(new javax.swing.ImageIcon(getClass().getResource("/templarCoin/multimedia/cash-icon.png"))); // NOI18N
-        btRegister.setText("Register");
+        btRegister.setText("Votar");
         btRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRegisterActionPerformed(evt);
@@ -133,7 +136,7 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/templarCoin/multimedia/templarCoin.png"))); // NOI18N
         jPanel1.add(jLabel1, java.awt.BorderLayout.CENTER);
 
-        tpTransaction.addTab("Transaction", new javax.swing.ImageIcon(getClass().getResource("/templarCoin/multimedia/templar.png")), jPanel1); // NOI18N
+        tpTransaction.addTab("Votos", new javax.swing.ImageIcon(getClass().getResource("/templarCoin/multimedia/templar.png")), jPanel1); // NOI18N
 
         pnUsersBalance.setLayout(new java.awt.BorderLayout());
 
@@ -147,26 +150,22 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
 
         pnUsersBalance.add(jScrollPane2, java.awt.BorderLayout.CENTER);
 
-        tpTransaction.addTab("Users Balance", new javax.swing.ImageIcon(getClass().getResource("/templarCoin/multimedia/users_ledger_24.png")), pnUsersBalance); // NOI18N
+        tpTransaction.addTab("Eleitores", new javax.swing.ImageIcon(getClass().getResource("/templarCoin/multimedia/users_ledger_24.png")), pnUsersBalance); // NOI18N
 
         getContentPane().add(tpTransaction, java.awt.BorderLayout.WEST);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtToActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtToActionPerformed
-
     private void btRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRegisterActionPerformed
         try {
-            Transaction t = new Transaction(
-                    txtFrom.getText(),
+            /*Transaction t = new Transaction(
+                   /* txtFrom.getText(),
                     txtTo.getText(),
                     Double.valueOf(txtValue.getText())
             );
             
-            coin.add(t);
+            coin.add(t);*/
             txtLeger.setText(coin.toString());
             txtBlochains.setText(coin.getSecureLedger().toString());
             coin.save(fileTemplarCpoin);
@@ -183,6 +182,10 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
             lstUsers.setModel(model);
         }
     }//GEN-LAST:event_tpTransactionStateChanged
+
+    private void txtValueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtValueActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtValueActionPerformed
 
     /**
      * @param args the command line arguments
@@ -221,6 +224,8 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRegister;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private javax.swing.JComboBox<String> jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
@@ -232,9 +237,7 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
     private javax.swing.JPanel pnUsersBalance;
     private javax.swing.JTabbedPane tpTransaction;
     private javax.swing.JTextArea txtBlochains;
-    private javax.swing.JTextField txtFrom;
     private javax.swing.JTextArea txtLeger;
-    private javax.swing.JTextField txtTo;
     private javax.swing.JTextField txtValue;
     // End of variables declaration//GEN-END:variables
 }
