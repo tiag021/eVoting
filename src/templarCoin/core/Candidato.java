@@ -8,6 +8,20 @@ package templarCoin.core;
  *
  * @author almei
  */
-public class Candidato {
+public class Candidato extends Pessoa{
+    private String idCandidato;
+    
+    public Candidato(String nome, int idade, String idCandidato) {
+        super(nome, idade);
+        this.idCandidato = idCandidato;
+    }
+
+    public String getIdCandidato() {
+        return idCandidato;
+    }
+
+    public void setIdCandidato(String idCandidato) {
+        this.idCandidato = idCandidato;
+    }
     
 }
