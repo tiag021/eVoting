@@ -1,13 +1,24 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package templarCoin.core;
 
 /**
  *
  * @author almei
  */
-public class Eleitor {
+public class Eleitor extends Pessoa{
+    private String partido;
+    
+    public Eleitor(String nome, int idade, String partido) {
+        super(nome, idade);
+        this.partido = partido;
+    }
+
+    public String getPartido() {
+        return partido;
+    }
+
+    public void setPartido(String partido) {
+        this.partido = partido;
+    }
     
 }
