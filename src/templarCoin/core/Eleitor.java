@@ -6,19 +6,19 @@ package templarCoin.core;
  * @author almei
  */
 public class Eleitor extends Pessoa{
-    private String partido;
+    private String idEleitor;
     
-    public Eleitor(String nome, int idade, String partido) {
+    public Eleitor(String nome, int idade, String idEleitor) {
         super(nome, idade);
-        this.partido = partido;
+        this.idEleitor = idEleitor;
     }
 
-    public String getPartido() {
-        return partido;
+    public String getIdEleitor() {
+        return idEleitor;
     }
 
-    public void setPartido(String partido) {
-        this.partido = partido;
+    public void setIdEleitor(String idEleitor) {
+        this.idEleitor = idEleitor;
     }
     
 }
