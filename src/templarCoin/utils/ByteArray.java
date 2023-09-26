@@ -10,61 +10,45 @@
 //::     This software was build with the purpose of investigate and         ::
 //::     learning.                                                           ::
 //::                                                                         ::
-//::                                                               (c)2022   ::
+//::                                                               (c)2023   ::
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //////////////////////////////////////////////////////////////////////////////
-package eVoting.core;
+package templarCoin.utils;
 
-import java.io.Serializable;
+import java.math.BigInteger;
 
 /**
+ * Created on 19/09/2023, 12:20:09
  *
- * @author manso
+ * @author manso - computer
  */
-public class Transaction implements Serializable{
+public class ByteArray {
 
-    private String from;
-    private String to;
-    private double value;
-
-    public Transaction(String from, String to, double value) {        
-        this.from = from;
-        this.to = to;
-        this.value = value;
+    public static String toHex(byte[] byteArray) {
+        return new BigInteger(1, byteArray).toString(16).toUpperCase();
     }
 
-    public double getValue() {
-        return value;
-    }
-
-    public void setValue(double value) {
-        this.value = value;
-    }
-
-    public String getFrom() {
-        return from;
-    }
-
-    public void setFrom(String from) {
-        this.from = from;
-    }
-
-    public String getTo() {
-        return to;
-    }
-
-    public void setTo(String to) {
-        this.to = to;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%-10s -> %8.2f -> %s", from,value,to);
-        //return from + "\t : " + to + "\t -> " + value;
+    public static byte[] fromHex(String hex) {
+        return new BigInteger(hex, 16).toByteArray();
     }
     
-    public static long serialVersionUID = 123;
+     public static String toBase64(byte[] byteArray) {
+        return new BigInteger(1, byteArray).toString(16).toUpperCase();
+    }
+
+    public static byte[] fromBase64(String hex) {
+        return new BigInteger(hex, 16).toByteArray();
+    }
     
-    
+    public static void main(String[] args) {
+        String txt = "Hello world 123";
+        String hex = toHex(txt.getBytes());
+        System.out.println("Hex  = " + hex);
+        System.out.println("Plain= " + new String(fromHex(hex)));
+        String b64 = toBase64(txt.getBytes());
+        System.out.println("Base64  = " + b64);
+        System.out.println("Plain= " + new String(fromBase64(b64)));
+        
+    }
 
 }

@@ -1,15 +1,26 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
-package eVoting.gui;
+//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//::                                                                         ::
+//::     Antonio Manuel Rodrigues Manso                                      ::
+//::                                                                         ::
+//::     I N S T I T U T O    P O L I T E C N I C O   D E   T O M A R        ::
+//::     Escola Superior de Tecnologia de Tomar                              ::
+//::     e-mail: manso@ipt.pt                                                ::
+//::     url   : http://orion.ipt.pt/~manso                                  ::
+//::                                                                         ::
+//::     This software was build with the purpose of investigate and         ::
+//::     learning.                                                           ::
+//::                                                                         ::
+//::                                                               (c)2020   ::
+//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+//////////////////////////////////////////////////////////////////////////////
+package templarCoin.gui;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import eVoting.core.eVoting;
-import eVoting.core.Transaction;
+import templarCoin.core.TemplarCoin;
+import templarCoin.core.Transaction;
 
 /**
  *
@@ -17,19 +28,20 @@ import eVoting.core.Transaction;
  */
 public class TemplarCoinGUI extends javax.swing.JFrame {
     public static String fileTemplarCpoin = "templarCoin.obj";
-    eVoting coin;
+    TemplarCoin coin;
     
     /**
      * Creates new form TemplarCoinGUI
      */
     public TemplarCoinGUI() {
         initComponents();
-        coin = new  eVoting();
+        coin = new  TemplarCoin();
         try {
-            coin = eVoting.load(fileTemplarCpoin);
+            coin = TemplarCoin.load(fileTemplarCpoin);
         } catch (Exception e) {
         }
         txtLeger.setText(coin.toString());
+        txtBlochains.setText(coin.getSecureLedger().toString());
         setSize(800, 600);
         setLocationRelativeTo(null);        
     }
@@ -46,6 +58,8 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtLeger = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        txtBlochains = new javax.swing.JTextArea();
         tpTransaction = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         pnTransaction = new javax.swing.JPanel();
@@ -67,6 +81,12 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
         jScrollPane1.setViewportView(txtLeger);
 
         jTabbedPane1.addTab("Ledger", new javax.swing.ImageIcon(getClass().getResource("/templarCoin/multimedia/blockChain.png")), jScrollPane1); // NOI18N
+
+        txtBlochains.setColumns(20);
+        txtBlochains.setRows(5);
+        jScrollPane3.setViewportView(txtBlochains);
+
+        jTabbedPane1.addTab("blockchain", jScrollPane3);
 
         getContentPane().add(jTabbedPane1, java.awt.BorderLayout.CENTER);
 
@@ -148,6 +168,7 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
             
             coin.add(t);
             txtLeger.setText(coin.toString());
+            txtBlochains.setText(coin.getSecureLedger().toString());
             coin.save(fileTemplarCpoin);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
@@ -158,7 +179,7 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
     private void tpTransactionStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tpTransactionStateChanged
         if( tpTransaction.getSelectedComponent()== pnUsersBalance){
             DefaultListModel model = new DefaultListModel();
-            model.addAll(coin.getUsers());
+            model.addAll(coin.getUsersBalance());
             lstUsers.setModel(model);
         }
     }//GEN-LAST:event_tpTransactionStateChanged
@@ -204,11 +225,13 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JList<String> lstUsers;
     private javax.swing.JPanel pnTransaction;
     private javax.swing.JPanel pnUsersBalance;
     private javax.swing.JTabbedPane tpTransaction;
+    private javax.swing.JTextArea txtBlochains;
     private javax.swing.JTextField txtFrom;
     private javax.swing.JTextArea txtLeger;
     private javax.swing.JTextField txtTo;

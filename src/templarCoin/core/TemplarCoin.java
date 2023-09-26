@@ -13,61 +13,75 @@
 //::                                                               (c)2020   ::
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //////////////////////////////////////////////////////////////////////////////
-package eVoting.core;
+package templarCoin.core;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import templarCoin.blockchain.Block;
+import templarCoin.blockchain.BlockChain;
 
 /**
  *
  * @author manso
  */
-public class eVoting implements Serializable {
+public class TemplarCoin implements Serializable {
 
-    private ArrayList<Transaction> ledger;
+   // private List<Transaction> ledger;
+    private BlockChain secureLedger;
+    public int dificulty = 4;
+    
+    public BlockChain getSecureLedger(){
+        return secureLedger;
+    }
+    
 
-    public eVoting() {
-        ledger = new ArrayList<>();
-        ledger.add(new Transaction("System", "Master", 1000));
+    public TemplarCoin() {
+        secureLedger = new BlockChain();
+       // ledger = new ArrayList<>();
+        Transaction seed =  new Transaction("system", "master", 1000);
+        secureLedger.add(seed.toText(), dificulty);
+        
     }
 
     public List<Transaction> getLedger() {
-        return ledger;
+        List<Transaction> lst = new ArrayList<>();
+        
+        for( Block b : secureLedger.getChain()){
+            lst.add( Transaction.fromText(b.getData()));
+        }
+        return lst;
     }
 
     @Override
     public String toString() {
         StringBuilder txt = new StringBuilder();
-        for (Transaction transaction : ledger) {
+        for (Transaction transaction : getLedger()) {
             txt.append(transaction.toString()).append("\n");
         }
         return txt.toString();
     }
 
-    public void save(String fileName) throws IOException {
-        try ( ObjectOutputStream out = new ObjectOutputStream(
-                new FileOutputStream(fileName))) {
-            out.writeObject(this);
-        }
+    public void save(String fileName) throws Exception {
+        secureLedger.save(fileName);
+//        try (PrintStream out = new PrintStream(
+//                new FileOutputStream(fileName))) {
+//            out.print(this.toString());
+//        }
     }
 
-    public static eVoting load(String fileName) throws IOException, ClassNotFoundException {
-        try ( ObjectInputStream in = new ObjectInputStream(
-                new FileInputStream(fileName))) {
-            return (eVoting) in.readObject();
-        }
+    public static TemplarCoin load(String fileName) throws Exception {
+        TemplarCoin tmp = new TemplarCoin();
+        tmp.secureLedger.load(fileName);
+        return tmp;
     }
 
     public double getAmount(String user) {
         double total = 0;
 
-        for (Transaction transaction : ledger) {
+        for (Transaction transaction : getLedger()) {
             if (transaction.getFrom().equalsIgnoreCase(user)) {
                 total -= transaction.getValue();
             } else if (transaction.getTo().equals(user)) {
@@ -98,16 +112,16 @@ public class eVoting implements Serializable {
 
     public void add(Transaction t) throws Exception {
         if (isValid(t)) {
-            ledger.add(t);
+            secureLedger.add(t.toText(),dificulty);
         } else {
             throw new Exception("Transaction not valid");
         }
     }
 
-    public List<String> getUsers() {
-        ArrayList<String> users = new ArrayList<>();
+    public List<String> getUsersBalance() {
+        List<String> users = new ArrayList<>();
         //get Users
-        for (Transaction transaction : ledger) {
+        for (Transaction transaction : getLedger()) {
             if (!users.contains(transaction.getFrom())) {
                 users.add(transaction.getFrom());
             }
@@ -115,10 +129,10 @@ public class eVoting implements Serializable {
                 users.add(transaction.getTo());
             }
         }
-        //get ampunt of users
+        //get amount of users
         ArrayList<String> balance = new ArrayList<>();
         for (String user : users) {
-            balance.add( String.format("%8.2f - %s", getAmount(user), user));
+            balance.add(String.format(Locale.ENGLISH,"%-15s %20.8f", user,getAmount(user)));
         }
         return balance;
     }

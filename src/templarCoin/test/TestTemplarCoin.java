@@ -2,13 +2,13 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package eVoting.test;
+package templarCoin.test;
 
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import eVoting.core.eVoting;
-import eVoting.core.Transaction;
+import templarCoin.core.TemplarCoin;
+import templarCoin.core.Transaction;
 
 /**
  *
@@ -19,7 +19,7 @@ public class TestTemplarCoin {
         try {
             //TemplarCoin coin  = new TemplarCoin();
             
-            eVoting coin  = eVoting.load("tc.obj");
+            TemplarCoin coin  = TemplarCoin.load("tc.obj");
           
             System.out.println("System : " + coin.getAmount("System"));
             System.out.println("Master : " + coin.getAmount("Master"));
