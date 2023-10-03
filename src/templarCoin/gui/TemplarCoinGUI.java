@@ -39,14 +39,12 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
     public static String fileTemplarCpoin = "templarCoin.obj";
     TemplarCoin coin;
     DefaultListModel<String> dlm = new DefaultListModel<>();
-    JList<String> list = new javax.swing.JList<>(dlm);
     /**
      * Creates new form TemplarCoinGUI
      */
     public TemplarCoinGUI() {
         initComponents();
-        lstCandidates= list;
-        
+
         coin = new TemplarCoin();
         try {
             coin = TemplarCoin.load(fileTemplarCpoin);
