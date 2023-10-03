@@ -9,6 +9,7 @@ package templarCoin.core;
  * @author almei
  */
 public class Candidato extends Pessoa{
+    
     private String idCandidato;
     
     public Candidato(String nome, int idade, String idCandidato) {
@@ -24,4 +25,7 @@ public class Candidato extends Pessoa{
         this.idCandidato = idCandidato;
     }
     
+    public String toString(){
+	return idCandidato + getNome();
+    }
 }
