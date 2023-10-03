@@ -15,10 +15,11 @@
 //////////////////////////////////////////////////////////////////////////////
 package templarCoin.core;
 
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import templarCoin.blockchain.Block;
 import templarCoin.blockchain.BlockChain;
 
@@ -28,36 +29,69 @@ import templarCoin.blockchain.BlockChain;
  */
 public class TemplarCoin implements Serializable {
 
-   // private List<Transaction> ledger;
+    private List<Voto> ledgerVoto;
+    private List<Candidato> ledgerCandidato;
+    private List<Eleitor> ledgerEleitor;
+
     private BlockChain secureLedger;
     public int dificulty = 4;
-    
-    public BlockChain getSecureLedger(){
+
+    public BlockChain getSecureLedger() {
         return secureLedger;
     }
-    
 
     public TemplarCoin() {
         secureLedger = new BlockChain();
-       // ledger = new ArrayList<>();
-        Transaction seed =  new Transaction("system", "master", 1000);
+        Voto seed = new Voto("system", "master");
         secureLedger.add(seed.toText(), dificulty);
-        
     }
 
-    public List<Transaction> getLedger() {
-        List<Transaction> lst = new ArrayList<>();
-        
-        for( Block b : secureLedger.getChain()){
-            lst.add( Transaction.fromText(b.getData()));
+    public List<Voto> getLedgerVoto() {
+        List<Voto> lst = new ArrayList<>();
+
+        for (Block b : secureLedger.getChain()) {
+            lst.add(Voto.fromText(b.getData()));
         }
         return lst;
     }
+    
+    public List<Candidato> getLedgerCandidato() {
+        List<Candidato> lstC = new ArrayList<>();
 
-    @Override
-    public String toString() {
+        for (Block b : secureLedger.getChain()) {
+            lstC.add(Candidato.fromText(b.getData()));
+        }
+        return lstC;
+    }
+    
+    public List<Eleitor> getLedgerEleitor() {
+        List<Eleitor> lstE = new ArrayList<>();
+
+        for (Block b : secureLedger.getChain()) {
+            lstE.add(Eleitor.fromText(b.getData()));
+        }
+        return lstE;
+    }
+
+    public String toStringVoto() {
         StringBuilder txt = new StringBuilder();
-        for (Transaction transaction : getLedger()) {
+        for (Object transaction : getLedgerVoto()) {
+            txt.append(transaction.toString()).append("\n");
+        }
+        return txt.toString();
+    }
+    
+    public String toStringEleitor() {
+        StringBuilder txt = new StringBuilder();
+        for (Object transaction : getLedgerEleitor()) {
+            txt.append(transaction.toString()).append("\n");
+        }
+        return txt.toString();
+    }
+    
+    public String toStringCandidato() {
+        StringBuilder txt = new StringBuilder();
+        for (Object transaction : getLedgerCandidato()) {
             txt.append(transaction.toString()).append("\n");
         }
         return txt.toString();
@@ -65,10 +99,10 @@ public class TemplarCoin implements Serializable {
 
     public void save(String fileName) throws Exception {
         secureLedger.save(fileName);
-//        try (PrintStream out = new PrintStream(
-//                new FileOutputStream(fileName))) {
-//            out.print(this.toString());
-//        }
+        try (PrintStream out = new PrintStream(
+                new FileOutputStream(fileName))) {
+            out.print(this.toString());
+        }
     }
 
     public static TemplarCoin load(String fileName) throws Exception {
@@ -77,63 +111,40 @@ public class TemplarCoin implements Serializable {
         return tmp;
     }
 
-    public double getAmount(String user) {
-        double total = 0;
-
-        for (Transaction transaction : getLedger()) {
-            if (transaction.getFrom().equalsIgnoreCase(user)) {
-                total -= transaction.getValue();
-            } else if (transaction.getTo().equals(user)) {
-                total += transaction.getValue();
-            }
-        }
-
-        return total;
+    public boolean isValid(Voto t) throws Exception {
+        return true;
     }
 
-    public boolean isValid(Transaction t) throws Exception {
-        if (t.getValue() <= 0) {
-            throw new Exception("Value " + t.getValue() + " is invalid");
-        }
-        if (t.getFrom().trim().isEmpty()) {
-            throw new Exception("From user is empty");
-        }
-        if (t.getTo().trim().isEmpty()) {
-            throw new Exception("To user is empty");
-        }
-        double value = getAmount(t.getFrom());
-        if (t.getValue() > value) {
-            throw new Exception(t.getFrom() + " not have founds \n"
-                    + t.getValue() + " is larger than " + value);
-        }
-        return t.getValue() <= value;
+    public boolean isCandidatoValido(Candidato c) throws Exception {
+        return true;
     }
 
-    public void add(Transaction t) throws Exception {
-        if (isValid(t)) {
-            secureLedger.add(t.toText(),dificulty);
+    public boolean idEleitorValido(Eleitor e) throws Exception {
+        return true;
+    }
+
+    public void addVoto(Voto v) throws Exception {
+        if (isValid(v)) {
+            secureLedger.add(v.toText(), dificulty);
         } else {
             throw new Exception("Transaction not valid");
         }
     }
 
-    public List<String> getUsersBalance() {
-        List<String> users = new ArrayList<>();
-        //get Users
-        for (Transaction transaction : getLedger()) {
-            if (!users.contains(transaction.getFrom())) {
-                users.add(transaction.getFrom());
-            }
-            if (!users.contains(transaction.getTo())) {
-                users.add(transaction.getTo());
-            }
+    public void addCandidato(Candidato c) throws Exception {
+        if (isCandidatoValido(c)) {
+            secureLedger.add(c.toText(), dificulty);
+        } else {
+            throw new Exception("Candidato inválido");
         }
-        //get amount of users
-        ArrayList<String> balance = new ArrayList<>();
-        for (String user : users) {
-            balance.add(String.format(Locale.ENGLISH,"%-15s %20.8f", user,getAmount(user)));
+    }
+
+    public void addEleitor(Eleitor e) throws Exception {
+        if (idEleitorValido(e)) {
+            secureLedger.add(e.toText(), dificulty);
+        } else {
+            throw new Exception("Eleitor inválido");
         }
-        return balance;
     }
 
     public static long serialVersionUID = 123;

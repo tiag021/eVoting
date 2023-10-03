@@ -16,31 +16,20 @@
 package templarCoin.core;
 
 import java.io.Serializable;
-import java.util.Locale;
 import templarCoin.blockchain.Converter;
 
 /**
  *
  * @author manso
  */
-public class Transaction implements Serializable {
+public class Voto implements Serializable {
 
     private String from;
     private String to;
-    private double value;
 
-    public Transaction(String from, String to, double value) {
+    public Voto(String from, String to) {
         this.from = from;
         this.to = to;
-        this.value = value;
-    }
-
-    public double getValue() {
-        return value;
-    }
-
-    public void setValue(double value) {
-        this.value = value;
     }
 
     public String getFrom() {
@@ -63,24 +52,21 @@ public class Transaction implements Serializable {
     public String toString() {
         //format values to english notation
 
-        return String.format("%-10s -> %20s -> %s", from, String.format(Locale.ENGLISH,"%.8f",value), to);
+        return String.format("%-10s -> %20s", from, to);
         //return from + "\t : " + to + "\t -> " + value;
     }
 
-    public static Transaction fromString(String txt) throws Exception {
+    public static Voto fromString(String txt) throws Exception {
         String[] elem = txt.split(" -> ");
-        return new Transaction(elem[0].trim(), elem[2].trim(),
-                Double.parseDouble(elem[1].trim()));
+        return new Voto(elem[0].trim(), elem[2].trim());
     }
-
-    
     
     public String toText(){
        return Converter.objectToHex(this);
     }
     
-    public static Transaction fromText(String obj){
-       return (Transaction) Converter.hexToObject(obj);
+    public static Voto fromText(String obj){
+       return (Voto) Converter.hexToObject(obj);
     }
     
     public static long serialVersionUID = 123;

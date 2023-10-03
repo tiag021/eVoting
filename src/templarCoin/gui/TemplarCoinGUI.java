@@ -20,15 +20,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.ListModel;
 import templarCoin.core.Candidato;
 import templarCoin.core.Eleitor;
 import templarCoin.core.TemplarCoin;
-import templarCoin.core.Transaction;
+import templarCoin.core.Voto;
 
 /**
  *
@@ -36,22 +34,27 @@ import templarCoin.core.Transaction;
  */
 public class TemplarCoinGUI extends javax.swing.JFrame {
 
-    public static String fileTemplarCpoin = "templarCoin.obj";
-    TemplarCoin coin;
-    DefaultListModel<String> dlm = new DefaultListModel<>();
+    public static String ficheiroVotos = "sistemaVotos.obj";
+    public static String ficheiroEleitores = "sistemaEleitores.obj";
+    public static String ficheiroCandidatos = "sistemaCandidatos.obj";
+    TemplarCoin votoTrans;
+    Candidato candidato;
+    Eleitor eleitor;
+    DefaultListModel modelCandidatos = new DefaultListModel();
+    DefaultListModel modelEleitores = new DefaultListModel();
+
     /**
      * Creates new form TemplarCoinGUI
      */
     public TemplarCoinGUI() {
         initComponents();
-
-        coin = new TemplarCoin();
+        votoTrans = new TemplarCoin();
         try {
-            coin = TemplarCoin.load(fileTemplarCpoin);
+            votoTrans = TemplarCoin.load(ficheiroVotos);
         } catch (Exception e) {
         }
-        txtLeger.setText(coin.toString());
-        txtBlochains.setText(coin.getSecureLedger().toString());
+        txtLedger.setText(votoTrans.toString());
+        txtBlochains.setText(votoTrans.getSecureLedger().toString());
         setSize(800, 600);
         setLocationRelativeTo(null);
     }
@@ -67,7 +70,7 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
-        txtLeger = new javax.swing.JTextArea();
+        txtLedger = new javax.swing.JTextArea();
         jScrollPane3 = new javax.swing.JScrollPane();
         txtBlochains = new javax.swing.JTextArea();
         tpTransaction = new javax.swing.JTabbedPane();
@@ -75,7 +78,6 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
         pnTransaction = new javax.swing.JPanel();
         jComboBox1 = new javax.swing.JComboBox<>();
         jComboBox2 = new javax.swing.JComboBox<>();
-        txtValue = new javax.swing.JTextField();
         btRegister = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         pnEleitores = new javax.swing.JPanel();
@@ -84,8 +86,7 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         pnCandidatos = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
-        lstCandidates = new javax.swing.JList<>(dlm);
-        ;
+        lstCandidates = new javax.swing.JList<>();
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -93,10 +94,10 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
 
         jTabbedPane1.setPreferredSize(new java.awt.Dimension(234, 0));
 
-        txtLeger.setColumns(20);
-        txtLeger.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
-        txtLeger.setRows(5);
-        jScrollPane1.setViewportView(txtLeger);
+        txtLedger.setColumns(20);
+        txtLedger.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
+        txtLedger.setRows(5);
+        jScrollPane1.setViewportView(txtLedger);
 
         jTabbedPane1.addTab("Ledger", new javax.swing.ImageIcon(getClass().getResource("/templarCoin/multimedia/blockChain.png")), jScrollPane1); // NOI18N
 
@@ -119,28 +120,28 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
         jPanel1.setMinimumSize(new java.awt.Dimension(260, 450));
         jPanel1.setLayout(new java.awt.BorderLayout());
 
-        pnTransaction.setPreferredSize(new java.awt.Dimension(109, 180));
+        pnTransaction.setPreferredSize(new java.awt.Dimension(109, 250));
         pnTransaction.setLayout(new java.awt.GridLayout(4, 1, 5, 5));
 
         jComboBox1.setEditable(true);
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox1.setBorder(javax.swing.BorderFactory.createTitledBorder("Eleitor"));
+        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox1ActionPerformed(evt);
+            }
+        });
         pnTransaction.add(jComboBox1);
 
         jComboBox2.setEditable(true);
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         jComboBox2.setBorder(javax.swing.BorderFactory.createTitledBorder("Candidato"));
-        pnTransaction.add(jComboBox2);
-
-        txtValue.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        txtValue.setText("0.0");
-        txtValue.setBorder(javax.swing.BorderFactory.createTitledBorder("Value"));
-        txtValue.addActionListener(new java.awt.event.ActionListener() {
+        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtValueActionPerformed(evt);
+                jComboBox2ActionPerformed(evt);
             }
         });
-        pnTransaction.add(txtValue);
+        pnTransaction.add(jComboBox2);
 
         btRegister.setIcon(new javax.swing.ImageIcon(getClass().getResource("/templarCoin/multimedia/cash-icon.png"))); // NOI18N
         btRegister.setText("Votar");
@@ -209,9 +210,20 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
 
     private void tpTransactionStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tpTransactionStateChanged
         if (tpTransaction.getSelectedComponent() == pnEleitores) {
-            DefaultListModel model = new DefaultListModel();
-            model.addAll(coin.getUsersBalance());
-            lstUsers.setModel(model);
+            if (eleitor == null) {
+                modelEleitores.clear();
+            } else {
+                modelEleitores.addAll(eleitor.getEleitores());
+            }
+            lstUsers.setModel(modelEleitores);
+        }
+        if (tpTransaction.getSelectedComponent() == pnCandidatos) {
+            if (candidato == null) {
+                modelCandidatos.clear();
+            } else {
+                modelCandidatos.addAll(candidato.getCandidatos());
+            }
+            lstCandidates.setModel(modelCandidatos);
         }
     }//GEN-LAST:event_tpTransactionStateChanged
 
@@ -243,24 +255,18 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
             String id = idField.getText();
 
             // Create a Candidate
-            Eleitor eleitor = new Eleitor(name, age, id);
-	    
-	    try {
-            Transaction t = new Transaction(
-                    "master",
-                    name,
-                    1.0
-            );
-            
-            coin.add(t);
-            txtLeger.setText(coin.toString());
-            txtBlochains.setText(coin.getSecureLedger().toString());
-            coin.save(fileTemplarCpoin);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-            Logger.getLogger(TemplarCoinGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            eleitor = new Eleitor(name, age, id);
+            eleitor.addEleitorLista();
+            updateLista();
 
+            try {
+                votoTrans.addEleitor(eleitor);
+                txtLedger.setText(votoTrans.toStringEleitor());
+                txtBlochains.setText(votoTrans.getSecureLedger().toString());
+                votoTrans.save(ficheiroEleitores);
+            } catch (Exception ex) {
+                Logger.getLogger(TemplarCoinGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
             // You can perform further actions with the created candidate here.
             // For example, display the candidate's information.
             JOptionPane.showMessageDialog(this,
@@ -272,26 +278,39 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
 
     private void btRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRegisterActionPerformed
         try {
-            /*Transaction t = new Transaction(
-                /* txtFrom.getText(),
-                txtTo.getText(),
-                Double.valueOf(txtValue.getText())
+            Voto t = new Voto(
+                    jComboBox1.getItemAt(jComboBox1.getSelectedIndex()),
+                    jComboBox2.getItemAt(jComboBox2.getSelectedIndex())
             );
 
-            coin.add(t);*/
-            txtLeger.setText(coin.toString());
-            txtBlochains.setText(coin.getSecureLedger().toString());
-            coin.save(fileTemplarCpoin);
+            votoTrans.addVoto(t);
+            txtLedger.setText(votoTrans.toString());
+            txtBlochains.setText(votoTrans.getSecureLedger().toString());
+            votoTrans.save(ficheiroVotos);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
             Logger.getLogger(TemplarCoinGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btRegisterActionPerformed
 
-    private void txtValueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtValueActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtValueActionPerformed
-
+    private void updateLista() {
+        if (tpTransaction.getSelectedComponent() == pnEleitores) {
+            if (eleitor == null) {
+                modelEleitores.clear();
+            } else {
+                modelEleitores.addAll(eleitor.getEleitores());
+            }
+            lstUsers.setModel(modelEleitores);
+        }
+        if (tpTransaction.getSelectedComponent() == pnCandidatos) {
+            if (candidato == null) {
+                modelCandidatos.clear();
+            } else {
+                modelCandidatos.addAll(candidato.getCandidatos());
+            }
+            lstCandidates.setModel(modelCandidatos);
+        }
+    }
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // Create input fields
         JTextField nameField = new JTextField(10);
@@ -320,15 +339,34 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
             String id = idField.getText();
 
             // Create a Candidate
-            Candidato candidato = new Candidato(name, age, id);
+            candidato = new Candidato(name, age, id);
+            candidato.addCandidatoLista();
+            updateLista();
+
+            try {
+                votoTrans.addCandidato(candidato);
+                txtLedger.setText(votoTrans.toStringCandidato());
+                txtBlochains.setText(votoTrans.getSecureLedger().toString());
+                votoTrans.save(ficheiroCandidatos);
+            } catch (Exception ex) {
+                Logger.getLogger(TemplarCoinGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
             // You can perform further actions with the created candidate here.
             // For example, display the candidate's information.
             JOptionPane.showMessageDialog(this,
-                    "Candidato: " + candidato.getNome() + ", ID: " + candidato.getIdCandidato(), 
+                    "Candidato: " + candidato.getNome() + ", ID: " + candidato.getIdCandidato(),
                     "Criar Candidato", JOptionPane.INFORMATION_MESSAGE);
         }
 
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+        // TODO addVoto your handling code here:
+    }//GEN-LAST:event_jComboBox2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -385,7 +423,6 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
     private javax.swing.JPanel pnTransaction;
     private javax.swing.JTabbedPane tpTransaction;
     private javax.swing.JTextArea txtBlochains;
-    private javax.swing.JTextArea txtLeger;
-    private javax.swing.JTextField txtValue;
+    private javax.swing.JTextArea txtLedger;
     // End of variables declaration//GEN-END:variables
 }
