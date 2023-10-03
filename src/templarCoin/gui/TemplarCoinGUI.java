@@ -24,12 +24,11 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.ListModel;
 import templarCoin.core.Candidato;
 import templarCoin.core.Eleitor;
 import templarCoin.core.TemplarCoin;
 import templarCoin.core.Transaction;
-import templarCoin.core.ListCandidates;
-import templarCoin.utils.ElectionUtils;
 
 /**
  *
@@ -39,22 +38,15 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
 
     public static String fileTemplarCpoin = "templarCoin.obj";
     TemplarCoin coin;
-    protected ListCandidates lista;
-    JList candidatesList;
-    
-    
-    
-    public void populateCand(){
-	//lstCandidates.setModel(ListCandidates.getListData());
-	lstCandidates.setModel(ElectionUtils.getListModel(this.lista.getLista()));
-    }
-    
-    
+    DefaultListModel<String> dlm = new DefaultListModel<>();
+    JList<String> list = new javax.swing.JList<>(dlm);
     /**
      * Creates new form TemplarCoinGUI
      */
     public TemplarCoinGUI() {
         initComponents();
+        lstCandidates= list;
+        
         coin = new TemplarCoin();
         try {
             coin = TemplarCoin.load(fileTemplarCpoin);
@@ -64,10 +56,6 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
         txtBlochains.setText(coin.getSecureLedger().toString());
         setSize(800, 600);
         setLocationRelativeTo(null);
-	
-	candidatesList = new JList();
-	
-	//populateCand();
     }
 
     /**
@@ -98,7 +86,8 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         pnCandidatos = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
-        lstCandidates = new javax.swing.JList<>();
+        lstCandidates = new javax.swing.JList<>(dlm);
+        ;
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -334,8 +323,6 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
 
             // Create a Candidate
             Candidato candidato = new Candidato(name, age, id);
-	    lista.getLista().add(candidato);
-	    populateCand();
             // You can perform further actions with the created candidate here.
             // For example, display the candidate's information.
             JOptionPane.showMessageDialog(this,
