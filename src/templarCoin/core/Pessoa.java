@@ -4,13 +4,15 @@
  */
 package templarCoin.core;
 
+import java.io.Serializable;
+
 /**
  *
  * @author almei
  */
-public class Pessoa {
+public class Pessoa implements Serializable{
 
-    private String nome;
+    public String nome;
     private int idade;
 
     public Pessoa(String nome, int idade) {

@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -27,6 +28,8 @@ import templarCoin.core.Candidato;
 import templarCoin.core.Eleitor;
 import templarCoin.core.TemplarCoin;
 import templarCoin.core.Transaction;
+import templarCoin.core.ListCandidates;
+import templarCoin.utils.ElectionUtils;
 
 /**
  *
@@ -36,7 +39,17 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
 
     public static String fileTemplarCpoin = "templarCoin.obj";
     TemplarCoin coin;
-
+    protected ListCandidates lista;
+    JList candidatesList;
+    
+    
+    
+    public void populateCand(){
+	//lstCandidates.setModel(ListCandidates.getListData());
+	lstCandidates.setModel(ElectionUtils.getListModel(this.lista.getLista()));
+    }
+    
+    
     /**
      * Creates new form TemplarCoinGUI
      */
@@ -51,6 +64,10 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
         txtBlochains.setText(coin.getSecureLedger().toString());
         setSize(800, 600);
         setLocationRelativeTo(null);
+	
+	candidatesList = new JList();
+	
+	//populateCand();
     }
 
     /**
@@ -81,7 +98,7 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         pnCandidatos = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
-        lstUsers2 = new javax.swing.JList<>();
+        lstCandidates = new javax.swing.JList<>();
         jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -178,13 +195,13 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
 
         pnCandidatos.setLayout(new java.awt.BorderLayout());
 
-        lstUsers2.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        lstUsers2.setModel(new javax.swing.AbstractListModel<String>() {
+        lstCandidates.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
+        lstCandidates.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane5.setViewportView(lstUsers2);
+        jScrollPane5.setViewportView(lstCandidates);
 
         pnCandidatos.add(jScrollPane5, java.awt.BorderLayout.CENTER);
 
@@ -240,6 +257,22 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
 
             // Create a Candidate
             Eleitor eleitor = new Eleitor(name, age, id);
+	    
+	    try {
+            Transaction t = new Transaction(
+                    "master",
+                    name,
+                    1.0
+            );
+            
+            coin.add(t);
+            txtLeger.setText(coin.toString());
+            txtBlochains.setText(coin.getSecureLedger().toString());
+            coin.save(fileTemplarCpoin);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            Logger.getLogger(TemplarCoinGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
             // You can perform further actions with the created candidate here.
             // For example, display the candidate's information.
@@ -301,7 +334,8 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
 
             // Create a Candidate
             Candidato candidato = new Candidato(name, age, id);
-
+	    lista.getLista().add(candidato);
+	    populateCand();
             // You can perform further actions with the created candidate here.
             // For example, display the candidate's information.
             JOptionPane.showMessageDialog(this,
@@ -359,8 +393,8 @@ public class TemplarCoinGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JList<String> lstCandidates;
     private javax.swing.JList<String> lstUsers;
-    private javax.swing.JList<String> lstUsers2;
     private javax.swing.JPanel pnCandidatos;
     private javax.swing.JPanel pnEleitores;
     private javax.swing.JPanel pnTransaction;
