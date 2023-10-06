@@ -16,7 +16,9 @@
 package templarCoin.blockchain;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -88,11 +90,20 @@ public class BlockChain implements Serializable {
         }
     }
 
-    public void load(String fileName) throws Exception {
-        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
-            this.chain = (ArrayList<Block>) in.readObject();
-        }
+public void load(String fileName) throws Exception {
+    try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
+        this.chain = (ArrayList<Block>) in.readObject();
+    } catch (FileNotFoundException e) {
+        // Handle the case where the file doesn't exist
+        e.printStackTrace(); // You can choose to log the error or handle it differently
+    } catch (IOException e) {
+        // Handle any other IOException that might occur during file reading
+        e.printStackTrace(); // You can choose to log the error or handle it differently
+    } catch (ClassNotFoundException e) {
+        // Handle the case where the class being deserialized is not found
+        e.printStackTrace(); // You can choose to log the error or handle it differently
     }
+}
 
     public boolean isValid() {
         //Validate blocks

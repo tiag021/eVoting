@@ -10,12 +10,11 @@ import java.io.Serializable;
  *
  * @author almei
  */
-public class Pessoa implements Serializable{
+public class Pessoa implements Serializable {
 
-    public String nome;
-    private int idade;
+    public String nome, idade;
 
-    public Pessoa(String nome, int idade) {
+    public Pessoa(String nome, String idade) {
         this.nome = nome;
         this.idade = idade;
     }
@@ -28,11 +27,11 @@ public class Pessoa implements Serializable{
         this.nome = nome;
     }
 
-    public int getIdade() {
+    public String getIdade() {
         return idade;
     }
 
-    public void setIdade(int idade) {
+    public void setIdade(String idade) {
         this.idade = idade;
     }
 
