@@ -352,7 +352,7 @@ public final class MerkleTreeString implements Serializable {
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    private static final long serialVersionUID = 202209131142L;
+    private static final long serialVersionUID = 123L;
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2022  :::::::::::::::::::
     ///////////////////////////////////////////////////////////////////////////
 

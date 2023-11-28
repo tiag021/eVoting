@@ -45,7 +45,7 @@ public class Miner {
         return nonce;
     }
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    private static final long serialVersionUID = 202209281113L;
+    private static final long serialVersionUID = 123L;
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2022  :::::::::::::::::::
     ///////////////////////////////////////////////////////////////////////////
 }

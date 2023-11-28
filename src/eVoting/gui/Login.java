@@ -1,20 +1,40 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package eVoting.gui;
 
-/**
- *
- * @author IPT
- */
+import eVoting.core.Pessoa;
+import eVoting.core.eVotingEleitores;
+import eVoting.utils.SecurityUtils;
+import java.awt.Color;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.security.KeyPair;
+import java.util.Base64;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+
 public class Login extends javax.swing.JFrame {
 
-    /**
-     * Creates new form Register
-     */
+    eVotingEleitores ledgerEleitores = new eVotingEleitores();
+    public static String ficheiroEleitores = "sistemaEleitores.obj";
+
+    KeyPair keyPair = null;
+    JFileChooser fileChooser = new JFileChooser(new File("."));
+    int keyPairSize = 2048;
+
     public Login() {
         initComponents();
+        try {
+            ledgerEleitores = eVotingEleitores.load(ficheiroEleitores);
+
+        } catch (Exception ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     /**
@@ -28,20 +48,22 @@ public class Login extends javax.swing.JFrame {
 
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        txtUsername = new javax.swing.JTextField();
+        txtCC = new javax.swing.JTextField();
         txtPassword = new javax.swing.JPasswordField();
         btLogin = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
+        txtRegisterCC = new javax.swing.JTextField();
         txtRegisterName = new javax.swing.JTextField();
-        txtRegisterPassword1 = new javax.swing.JPasswordField();
-        txtRegisterPassword2 = new javax.swing.JPasswordField();
+        txtRegisterAge = new javax.swing.JTextField();
+        txtRegisterPassword = new javax.swing.JPasswordField();
+        txtRegisterPasswordConfirmation = new javax.swing.JPasswordField();
         btRegister = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        txtUsername.setFont(new java.awt.Font("Courier New", 0, 24)); // NOI18N
-        txtUsername.setBorder(javax.swing.BorderFactory.createTitledBorder("User Name"));
+        txtCC.setFont(new java.awt.Font("Courier New", 0, 24)); // NOI18N
+        txtCC.setBorder(javax.swing.BorderFactory.createTitledBorder("CC"));
 
         txtPassword.setFont(new java.awt.Font("Courier New", 0, 24)); // NOI18N
         txtPassword.setBorder(javax.swing.BorderFactory.createTitledBorder("Password"));
@@ -62,7 +84,7 @@ public class Login extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtPassword)
-                    .addComponent(txtUsername)
+                    .addComponent(txtCC)
                     .addComponent(btLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -70,29 +92,52 @@ public class Login extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtCC, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(86, Short.MAX_VALUE))
+                .addContainerGap(260, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Login", jPanel1);
 
-        jPanel3.setLayout(new java.awt.GridLayout(3, 0, 0, 10));
+        jPanel3.setLayout(new java.awt.GridLayout(5, 0, 0, 10));
+
+        txtRegisterCC.setFont(new java.awt.Font("Courier New", 0, 24)); // NOI18N
+        txtRegisterCC.setBorder(javax.swing.BorderFactory.createTitledBorder("Número do CC"));
+        txtRegisterCC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtRegisterCCActionPerformed(evt);
+            }
+        });
+        jPanel3.add(txtRegisterCC);
 
         txtRegisterName.setFont(new java.awt.Font("Courier New", 0, 24)); // NOI18N
-        txtRegisterName.setBorder(javax.swing.BorderFactory.createTitledBorder("User Name"));
+        txtRegisterName.setBorder(javax.swing.BorderFactory.createTitledBorder("Nome Completo"));
+        txtRegisterName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtRegisterNameActionPerformed(evt);
+            }
+        });
         jPanel3.add(txtRegisterName);
 
-        txtRegisterPassword1.setFont(new java.awt.Font("Courier New", 0, 24)); // NOI18N
-        txtRegisterPassword1.setBorder(javax.swing.BorderFactory.createTitledBorder("Password"));
-        jPanel3.add(txtRegisterPassword1);
+        txtRegisterAge.setFont(new java.awt.Font("Courier New", 0, 24)); // NOI18N
+        txtRegisterAge.setBorder(javax.swing.BorderFactory.createTitledBorder("Idade"));
+        txtRegisterAge.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtRegisterAgeActionPerformed(evt);
+            }
+        });
+        jPanel3.add(txtRegisterAge);
 
-        txtRegisterPassword2.setFont(new java.awt.Font("Courier New", 0, 24)); // NOI18N
-        txtRegisterPassword2.setBorder(javax.swing.BorderFactory.createTitledBorder("Password"));
-        jPanel3.add(txtRegisterPassword2);
+        txtRegisterPassword.setFont(new java.awt.Font("Courier New", 0, 24)); // NOI18N
+        txtRegisterPassword.setBorder(javax.swing.BorderFactory.createTitledBorder("Password"));
+        jPanel3.add(txtRegisterPassword);
+
+        txtRegisterPasswordConfirmation.setFont(new java.awt.Font("Courier New", 0, 24)); // NOI18N
+        txtRegisterPasswordConfirmation.setBorder(javax.swing.BorderFactory.createTitledBorder("Repita a Password"));
+        jPanel3.add(txtRegisterPasswordConfirmation);
 
         btRegister.setIcon(new javax.swing.ImageIcon(getClass().getResource("/eVoting/multimedia/register.png"))); // NOI18N
         btRegister.setText("Register");
@@ -116,10 +161,10 @@ public class Login extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(27, 27, 27)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 373, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addComponent(btRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab("Register", jPanel2);
@@ -131,15 +176,237 @@ public class Login extends javax.swing.JFrame {
 
     private void btRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRegisterActionPerformed
         // Obter os dados de registo do user
+        String cc = txtRegisterCC.getText();
         String nome = txtRegisterName.getText();
-        char[] passwordChar = txtRegisterPassword1.getPassword();
-        char[] passwordCharConf = txtRegisterPassword2.getPassword();
+        String idade = txtRegisterAge.getText();
+        String passwordEncriptada = null;
 
+        char[] passwordChar = txtRegisterPassword.getPassword();
+        char[] passwordCharConf = txtRegisterPasswordConfirmation.getPassword();
+
+        // Converter array caracteres para uma string
+        String passwordString = new String(passwordChar);
+        String confPasswordString = new String(passwordCharConf);
+
+        //verificação dos dados
+        if (verificaDados(cc, nome, idade, passwordString, confPasswordString)) {
+            passwordEncriptada = encriptaChave(passwordString);
+
+            //criar um novo candidato
+            Pessoa eleitor = new Pessoa(nome, cc, passwordEncriptada, Integer.parseInt(idade));
+
+            //tentativa de adicionar um eleitor à blockchain e guardar os seus dados
+            try {
+                ledgerEleitores.addEleitor(eleitor);
+                ledgerEleitores.save(ficheiroEleitores);
+                while (guardaChave() == false) {
+
+                }
+                // You can perform further actions with the created candidate here.
+                // For example, display the candidate's information.
+                JOptionPane.showMessageDialog(this,
+                        "ID: " + cc + ", Nome: " + nome + ", Idade: " + idade,
+                        "Eleitor criado com sucesso!", JOptionPane.INFORMATION_MESSAGE);
+                //até o user ser criado espera
+                while (!ledgerEleitores.eleitorExists(cc)) {
+
+                }
+                eVotingRun();
+
+            } catch (Exception ex) {
+                Logger.getLogger(eVotingGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_btRegisterActionPerformed
 
+    private boolean verificaDados(String cc, String nome, String idade, String passwordString, String confPasswordString) {
+        boolean ccBool, nomeBool, idadeBool, password1Bool, permissao;
+
+        //verificação dos campos de registo
+        //cc inválido
+        if (cc.isBlank() || !cc.matches("\\d+") || ((cc.matches("\\d+") && cc.length() != 8))) {
+            txtRegisterCC.setBackground(Color.RED);
+            JOptionPane.showMessageDialog(this, "Cartão de cidadão inválido!", "Erro", JOptionPane.ERROR_MESSAGE);
+            ccBool = false;
+        } else {
+            txtRegisterCC.setBackground(UIManager.getColor("TextField.background")); // Reset to default color
+            ccBool = true;
+        }
+
+        //cc já existe
+        if (ledgerEleitores.eleitorExists(cc)) {
+            txtRegisterCC.setBackground(Color.RED);
+            JOptionPane.showMessageDialog(this, "Cartão de cidadão existente!", "Erro", JOptionPane.ERROR_MESSAGE);
+        } else {
+            txtRegisterCC.setBackground(UIManager.getColor("TextField.background")); // Reset to default color
+            ccBool = true;
+        }
+
+        if (nome.isBlank() || !nome.matches("[a-zA-Z\\s]+") || nome.length() < 5) {
+            txtRegisterName.setBackground(Color.RED);
+            JOptionPane.showMessageDialog(this, "Nome inválido!", "Erro", JOptionPane.ERROR_MESSAGE);
+            nomeBool = false;
+        } else {
+            txtRegisterName.setBackground(UIManager.getColor("TextField.background")); // Reset to default color
+            nomeBool = true;
+        }
+
+        if (idade.isBlank() || Integer.parseInt(idade) < 18) {
+            txtRegisterAge.setBackground(Color.RED);
+            JOptionPane.showMessageDialog(this, "Menor de idade!", "Erro", JOptionPane.ERROR_MESSAGE);
+            idadeBool = false;
+        } else {
+            txtRegisterAge.setBackground(UIManager.getColor("TextField.background")); // Reset to default color
+            idadeBool = true;
+        }
+
+        if (passwordString.isBlank()) {
+            txtRegisterPassword.setBackground(Color.RED);
+            JOptionPane.showMessageDialog(this, "Não inserir a password!", "Erro", JOptionPane.ERROR_MESSAGE);
+        } else {
+            txtRegisterPassword.setBackground(UIManager.getColor("TextField.background")); // Reset to default color
+        }
+
+        if (confPasswordString.isBlank()) {
+            txtRegisterPasswordConfirmation.setBackground(Color.RED);
+            JOptionPane.showMessageDialog(this, "Não confirmou a password!", "Erro", JOptionPane.ERROR_MESSAGE);
+        } else {
+            txtRegisterPasswordConfirmation.setBackground(UIManager.getColor("TextField.background")); // Reset to default color
+        }
+
+        //verificação da password
+        if (!passwordString.equals(confPasswordString)) {
+            txtRegisterPassword.setBackground(Color.RED);
+            txtRegisterPasswordConfirmation.setBackground(Color.RED);
+            password1Bool = false;
+            JOptionPane.showMessageDialog(this, "Passwords diferentes!", "Erro", JOptionPane.ERROR_MESSAGE);
+        } else if (passwordString.equals(confPasswordString) && (!passwordString.isBlank() && !confPasswordString.isBlank())) {
+            txtRegisterPassword.setBackground(UIManager.getColor("TextField.background")); // Reset to default color
+            txtRegisterPasswordConfirmation.setBackground(UIManager.getColor("TextField.background")); // Reset to default color
+            password1Bool = true;
+        } else {
+            password1Bool = false;
+        }
+
+        if (ccBool && nomeBool && idadeBool && password1Bool) {
+            permissao = true;
+        } else {
+            permissao = false;
+        }
+
+        return permissao;
+    }
+
+    private String encriptaChave(String password) {
+        String passwordEncriptada = null;
+
+        //geração do par de chaves pública e privada
+        try {
+            keyPair = SecurityUtils.generateRSAKeyPair(keyPairSize);
+        } catch (Exception ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), ex.getClass().getName(), JOptionPane.ERROR_MESSAGE);
+        }
+
+        //encriptação da password
+        try {
+            byte[] secret = SecurityUtils.encrypt(password.getBytes(), keyPair.getPublic());
+            passwordEncriptada = Base64.getEncoder().encodeToString(secret);
+        } catch (Exception ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), ex.getClass().getName(), JOptionPane.ERROR_MESSAGE);
+        }
+
+        return passwordEncriptada;
+    }
+
+    private String decriptaChave() {
+
+        try {
+            byte[] secret = Base64.getDecoder().decode(ledgerEleitores.getPasswordEncriptada(txtCC.getText()));
+            byte[] data = SecurityUtils.decrypt(secret, keyPair.getPrivate());
+            String chave = new String(data);
+            return chave;
+        } catch (Exception ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), ex.getClass().getName(), JOptionPane.ERROR_MESSAGE);
+        }
+        return null;
+    }
+
+    private boolean guardaChave() {
+        try {
+            int resp = fileChooser.showSaveDialog(this);
+            if (resp == JFileChooser.APPROVE_OPTION) {
+                try (ObjectOutputStream bos = new ObjectOutputStream(new FileOutputStream(fileChooser.getSelectedFile()))) {
+                    bos.writeObject(keyPair);
+                    return true;
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), ex.getClass().getName(), JOptionPane.ERROR_MESSAGE);
+        }
+        return false;
+    }
+
+    private void carregaChave() {
+        try {
+            int resp = fileChooser.showOpenDialog(this);
+            if (resp == JFileChooser.APPROVE_OPTION) {
+                try (ObjectInputStream bin = new ObjectInputStream(new FileInputStream(fileChooser.getSelectedFile()))) {
+                    keyPair = (KeyPair) bin.readObject();
+                }
+            }
+        } catch (Exception ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, ex.getMessage(), ex.getClass().getName(), JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void eVotingRun() {
+        this.dispose();
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                eVotingGUI eVoting = new eVotingGUI(txtCC.getText());
+                eVoting.setVisible(true);
+            }
+        });
+    }
+
     private void btLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoginActionPerformed
+        // Pedir ficheiro das chaves public e privada
+        carregaChave();
+        // Decripta a chave e verifica 
+        String passwordInserida = new String(txtPassword.getPassword());
+
+        // utilizador não existe
+        if (!ledgerEleitores.eleitorExists(txtCC.getText())) {
+            JOptionPane.showMessageDialog(this, "Utilizador inexistente!", "Erro", JOptionPane.ERROR_MESSAGE);
+        } // password errada
+        else if (!passwordInserida.equals(decriptaChave())) {
+            JOptionPane.showMessageDialog(this, "Password inválida!", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+
+        // CC e password válidos
+        if (ledgerEleitores.eleitorExists(txtCC.getText()) && passwordInserida.equals(decriptaChave())) {
+            eVotingRun();
+        }
 
     }//GEN-LAST:event_btLoginActionPerformed
+
+    private void txtRegisterCCActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRegisterCCActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtRegisterCCActionPerformed
+
+    private void txtRegisterNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRegisterNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtRegisterNameActionPerformed
+
+    private void txtRegisterAgeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRegisterAgeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtRegisterAgeActionPerformed
 
     /**
      * @param args the command line arguments
@@ -155,10 +422,12 @@ public class Login extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (Exception ex) {
-            java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Login.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
         //</editor-fold>
@@ -180,10 +449,12 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextField txtCC;
     private javax.swing.JPasswordField txtPassword;
+    private javax.swing.JTextField txtRegisterAge;
+    private javax.swing.JTextField txtRegisterCC;
     private javax.swing.JTextField txtRegisterName;
-    private javax.swing.JPasswordField txtRegisterPassword1;
-    private javax.swing.JPasswordField txtRegisterPassword2;
-    private javax.swing.JTextField txtUsername;
+    private javax.swing.JPasswordField txtRegisterPassword;
+    private javax.swing.JPasswordField txtRegisterPasswordConfirmation;
     // End of variables declaration//GEN-END:variables
 }

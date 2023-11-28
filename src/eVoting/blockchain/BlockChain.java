@@ -34,7 +34,6 @@ public class BlockChain implements Serializable {
 
     ArrayList<Block> chain = new ArrayList<>();
 
-    
     public ArrayList<Block> getChain() {
         return chain;
     }
@@ -90,20 +89,24 @@ public class BlockChain implements Serializable {
         }
     }
 
-public void load(String fileName) throws Exception {
-    try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
-        this.chain = (ArrayList<Block>) in.readObject();
-    } catch (FileNotFoundException e) {
-        // Handle the case where the file doesn't exist
-        e.printStackTrace(); // You can choose to log the error or handle it differently
-    } catch (IOException e) {
-        // Handle any other IOException that might occur during file reading
-        e.printStackTrace(); // You can choose to log the error or handle it differently
-    } catch (ClassNotFoundException e) {
-        // Handle the case where the class being deserialized is not found
-        e.printStackTrace(); // You can choose to log the error or handle it differently
+    public boolean load(String fileName) {
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
+            this.chain = (ArrayList<Block>) in.readObject();
+            return true;
+        } catch (FileNotFoundException e) {
+            // Handle the case where the file doesn't exist
+            e.printStackTrace(); // You can choose to log the error or handle it differently
+            return false;
+        } catch (IOException e) {
+            // Handle any other IOException that might occur during file reading
+            e.printStackTrace(); // You can choose to log the error or handle it differently
+            return false;
+        } catch (ClassNotFoundException e) {
+            // Handle the case where the class being deserialized is not found
+            e.printStackTrace(); // You can choose to log the error or handle it differently
+            return false;
+        }
     }
-}
 
     public boolean isValid() {
         //Validate blocks
@@ -124,7 +127,7 @@ public void load(String fileName) throws Exception {
     }
 
     //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    private static final long serialVersionUID = 202208221009L;
+    private static final long serialVersionUID = 123L;
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2022  :::::::::::::::::::
     ///////////////////////////////////////////////////////////////////////////
 }

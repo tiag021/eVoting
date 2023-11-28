@@ -1,7 +1,5 @@
 package eVoting.core;
 
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,23 +8,21 @@ import eVoting.blockchain.BlockChain;
 
 public class eVoting implements Serializable {
 
-    private BlockChain secureLedgerVotos;
+    private BlockChain secureLedgerVoto;
     public int dificulty = 4;
 
-    public BlockChain getSecureLedgerVotos() {
-        return secureLedgerVotos;
+    public BlockChain getSecureLedgerVoto() {
+        return secureLedgerVoto;
     }
 
     public eVoting() {
-        secureLedgerVotos = new BlockChain();
-        Voto seed = new Voto("system", "master");
-        secureLedgerVotos.add(seed.toText(), dificulty);
+        secureLedgerVoto = new BlockChain();
     }
 
-    public List<Voto> getLedgerVoto() {
+    public List<Voto> getLedgerVotou() {
         List<Voto> lst = new ArrayList<>();
 
-        for (Block a : secureLedgerVotos.getChain()) {
+        for (Block a : secureLedgerVoto.getChain()) {
             lst.add(Voto.fromText(a.getData()));
         }
         return lst;
@@ -35,47 +31,53 @@ public class eVoting implements Serializable {
     public List<String> getVotos() {
         List<String> listaVotos = new ArrayList<>();
         //get Users
-        for (Voto voto : getLedgerVoto()) {
-            if (!listaVotos.contains(voto.getFrom())) {
-                listaVotos.add(voto.getFrom());
-            }
-            if (!listaVotos.contains(voto.getTo())) {
-                listaVotos.add(voto.getTo());
+        for (Voto votou : getLedgerVotou()) {
+            if (!listaVotos.contains(votou.getFrom())) {
+                listaVotos.add(votou.getFrom());
             }
         }
         return listaVotos;
     }
 
+    public boolean jaVotou(Pessoa p) {
+        return getVotos().contains(p.getCC());
+    }
+
     public String toStringVoto() {
         StringBuilder txt = new StringBuilder();
-        for (Voto voto : getLedgerVoto()) {
+        for (Voto voto : getLedgerVotou()) {
             txt.append(voto.toString()).append("\n");
         }
         return txt.toString();
     }
 
     public void save(String fileName) throws Exception {
-        secureLedgerVotos.save(fileName);
+        secureLedgerVoto.save(fileName);
     }
 
-    public static eVoting load(String fileName) throws Exception {
+    public static eVoting load(String fileName) {
         eVoting tmp = new eVoting();
-        tmp.secureLedgerVotos.load(fileName);
-        return tmp;
+        if (tmp.secureLedgerVoto.load(fileName)) {
+            return tmp;
+        }
+        return null;
     }
 
-    public boolean isValid(Voto t) throws Exception {
-        return true;
+    public boolean isValid(Voto v) throws Exception {
+        if (!getVotos().contains(v.getFrom())) {
+            return true;
+        }
+        return false;
     }
 
     public void addVoto(Voto v) throws Exception {
         if (isValid(v)) {
-            secureLedgerVotos.add(v.toText(), dificulty);
+            secureLedgerVoto.add(v.toText(), dificulty);
         } else {
-            throw new Exception("Transaction not valid");
+            throw new Exception("Voto inválido");
         }
     }
 
-    public static long serialVersionUID = 123;
+    public static long serialVersionUID = 123L;
 
 }
