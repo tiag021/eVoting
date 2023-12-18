@@ -255,6 +255,7 @@ public class eVotingGUI extends javax.swing.JFrame {
         
         if (ledgerVotos.jaVotou(eleitor)) {
             votouEleitor = "Sim";
+            btRegister.setEnabled(false);
         } else {
             votouEleitor = "Não";
         }

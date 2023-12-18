@@ -16,16 +16,13 @@
 package eVoting.password;
 
 import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.security.spec.KeySpec;
-import java.util.Arrays;
 import java.util.Random;
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
 /**
